@@ -41,14 +41,31 @@ export async function POST(request: Request) {
     const body = await request.json()
 
     // Validação básica (depois vamos usar Zod)
-    if (!body.name || !body.cpf || !body.birthDate || !body.tenantId) {
+    if (!body.name || !body.cpf || !body.birthDate) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Missing required fields: name, cpf, birthDate, tenantId',
+          error: 'Missing required fields: name, cpf, birthDate',
         },
         { status: 400 }
       )
+    }
+
+    // TODO: Quando tiver autenticação, pegar tenantId do usuário logado
+    // Por enquanto, pega o primeiro tenant do banco
+    let tenantId = body.tenantId
+    if (!tenantId) {
+      const firstTenant = await prisma.tenant.findFirst()
+      if (!firstTenant) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'No tenant found. Please run seed first.',
+          },
+          { status: 400 }
+        )
+      }
+      tenantId = firstTenant.id
     }
 
     const patient = await prisma.patient.create({
@@ -63,7 +80,10 @@ export async function POST(request: Request) {
         city: body.city,
         state: body.state,
         zipCode: body.zipCode,
-        tenantId: body.tenantId,
+        allergies: body.allergies,
+        medications: body.medications,
+        medicalHistory: body.medicalHistory,
+        tenantId: tenantId,
       },
     })
 

@@ -18,7 +18,7 @@ import { Badge } from "@/components/ui/badge"
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Pacientes", href: "/pacientes", icon: Users, badge: "142" },
+  { name: "Pacientes", href: "/dashboard/pacientes", icon: Users, badge: "142" },
   { name: "Prontuários", href: "/prontuarios", icon: FileText },
   { name: "Genograma", href: "/genograma", icon: Network, badge: "Beta" },
   { name: "Agendamentos", href: "/agendamentos", icon: Calendar, badge: "5" },
